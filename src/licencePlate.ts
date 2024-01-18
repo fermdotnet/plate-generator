@@ -1,23 +1,27 @@
 const licensePlate = (n: number): string => {
-  const plateLength = 6;
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const maxNumber = Math.pow(10, plateLength); // 10^6 for the numeric part
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-  let numericPart = n % maxNumber;
-  let alphaPart = Math.floor(n / maxNumber);
+  let level = 0;
+  let maxNumber = Math.pow(10, 6); // 10^6 for the numeric part
+  let tempN = n;
 
-  let alphaString = "";
+  // Determine the level based on the index
+  while (tempN >= maxNumber) {
+    level++;
+    maxNumber *= letters.length; // Adjust the divider for the next level
+  }
 
+  let numericPart = n % Math.pow(10, 6);
+  let alphaPart = Math.floor(n / Math.pow(10, 6));
+
+  let alphaString = '';
   while (alphaPart > 0) {
-    alphaString =
-      letters.charAt((alphaPart - 1) % letters.length) + alphaString;
+    alphaString = letters.charAt((alphaPart - 1) % letters.length) + alphaString;
     alphaPart = Math.floor((alphaPart - 1) / letters.length);
   }
 
-  return (
-    numericPart.toString().padStart(plateLength - alphaString.length, "0") +
-    alphaString
-  );
+  // Add zeros at the beginning based on the level and length of the alpha part
+  return numericPart.toString().padStart(6 - Math.min(level, alphaString.length), '0') + alphaString;
 };
 
 export { licensePlate };
